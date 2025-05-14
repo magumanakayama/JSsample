@@ -5,7 +5,7 @@ const object2 = {"num": 777};
 console.log(object);
 console.log(object2);
 
-console.log("----------------------------------------------");
+console.log("-----------------------------------------------");
 
 const multiple = {
   num: 2,
@@ -16,7 +16,7 @@ const multiple = {
 };
 
 console.log(multiple);
-console.log(multiple["num"]);
+
 console.log(multiple[undefined]); // undefinedはグローバル変数のため解決できる
 // console.log(multiple[num]);    // numが宣言されていないためエラー　https://www.agent-grow.com/self20percent/2020/10/26/undefined-not-defined/
 console.log(multiple["func"](777));
