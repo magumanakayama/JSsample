@@ -5,7 +5,7 @@ const object2 = {"num": 777};
 console.log(object);
 console.log(object2);
 
-console.log("-----------------------------------------------");
+console.log("--------------------------------------------------");
 
 const multiple = {
   num: 2,
