@@ -7,14 +7,14 @@ fetch("https://randomuser.me/api/")
     .then(response => response.json())
     .then(data => {
         console.log("1");
-        console.log(data);
+        console.log(JSON.stringify(data));
     });
 
 fetch("https://randomuser.me/api/")
-//   .then(response => response.json())
+    .then(response => response.json())
     .then(data => {
         console.log("2");
-        console.log(data);
+        console.log((JSON.stringify(data)));
     });
 
 
