@@ -2,13 +2,13 @@ import { readFile } from 'fs/promises';
 
 console.log("-----start-----");
 
-const main = async () => {
-    const data = await readFile("hoge.txt", "utf-8");
+const main = async (filePath) => {
+    const data = await readFile(filePath, "utf-8");
     console.log("await finish");
     return data;
 }
 
-main()
+main("hoge.txt")
     .then((data) => {
         console.log("File content: ", data);
     })
