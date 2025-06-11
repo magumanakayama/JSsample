@@ -1,5 +1,12 @@
 {
+    "private": true,
+    "name": "yoneda-app",
+    "description": "yoneda desu",
+    "version": "1.0.0",
     "type": "module",
+    "dependencies": {
+        "yargs": "^18.0.0"
+    },
     "imports": {
         "#interface/*": "./interface/*"
     }
