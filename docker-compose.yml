@@ -1,0 +1,19 @@
+# version: '3'
+services:
+  js_sample:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        - USER_UID=${UID}ß
+        - USER_GID=${GID}
+    user: "${UID}:${GID}"
+    container_name: JSsample
+    volumes:
+      - ./nodejsbook:/node-app/nodejsbook
+    environment:
+      USER_UID: ${UID}
+      USER_GID: ${GID}
+    ports:
+      - "3000:3000"
+    tty: true
