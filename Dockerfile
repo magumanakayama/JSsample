@@ -15,12 +15,16 @@ ARG USERNAME=node
 ARG USER_UID=1000
 ARG USER_GID=1000
 
+# エイリアス生成
+RUN echo 'alias server = "node server.js"' >> ~/.bashrc
+
 # アプリケーションのディレクトリ作成
 RUN mkdir -p /$NODE_ROOT/nodejsbook
 
 # コンテナ起動時スクリプトの生成
 RUN echo '#!/bin/sh' > /usr/local/bin/dockerInit.sh \
 && echo 'touch ./nodejsbook/CLI/yarn.lock && cd ./nodejsbook/CLI && yarn install && exec "$@" ' >> /usr/local/bin/dockerInit.sh \
+# && echo 'alias server= "node server.js" >> ~/.bashrc'  >> /usr/local/bin/dockerInit.sh \
 && chmod +x /usr/local/bin/dockerInit.sh
 
 # 作業ディレクトリ変更

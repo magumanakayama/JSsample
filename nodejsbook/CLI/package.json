@@ -20,6 +20,7 @@
     "scripts": {
         "lint": "eslint ./nodejsbook --ext .js,.ts",
         "lint nodejsbook": "eslint . --ext .js,.ts",
-        "test": "jest"
+        "test": "jest",
+        "server": "node ./server.js"
     }
 }
