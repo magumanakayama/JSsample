@@ -1,6 +1,15 @@
 const Redis = require('ioredis');
+const path = require('path');
 const express = require('express');
 const app = express();
+
+
+// EJSをテンプレートエンジンとして設定
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+    res.render(path.join(__dirname, 'view', 'index.ejs'));
+});
 
 
 // Redisクライアントの設定
@@ -20,16 +29,16 @@ const redisInit = async () => {
 };
          
 
-/////// Express ///////
+////////////// Express //////////////
 // 汎用ミドルウェア
 const logMiddleware = (req, res, next) => {
     console.log(`${Date.now()}, ${req.method} ${req.url}`);
     next();
 };
 
-app.get('/', logMiddleware, (req, res) => {
-    res.status(200).send('Hello, World!');
-});
+// app.get('/', logMiddleware, (req, res) => {
+//     res.status(200).send('Hello, World!');
+// });
 
 app.get('/user/:id', logMiddleware, async (req, res) => {
     try {
@@ -50,12 +59,13 @@ app.get('/err', logMiddleware, (req, res) => {
 
 // 包括的エラーハンドリング(Express全体のエラーハンドリングができる)
 app.use((err, req, res, next) => {
+    console.error(err);
     res.status(500).send('さーばーえらー');
 });
-///////////////////////
+//////////////////////////////////////////////
 
 
-/////// Redis ///////
+////////////// Redis //////////////
 redis.once ('ready', async () => {
 
     await redisInit();
@@ -74,4 +84,4 @@ redis.on('error', (err) => {
     console.error('Redisのエラー:', err);
     process.exit(1); // サーバーを終了
 });
-/////////////////////
+//////////////////////////////////////////
