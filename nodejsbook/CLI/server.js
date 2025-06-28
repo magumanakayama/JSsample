@@ -3,10 +3,12 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
+// 静的ファイル配信
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
 
 // EJSをテンプレートエンジンとして設定
 app.set('view engine', 'ejs');
-
 app.get('/', (req, res) => {
     res.render(path.join(__dirname, 'view', 'index.ejs'));
 });
@@ -21,15 +23,15 @@ const redis = new Redis({
 })
 
 const redisInit = async () => {
-    // await Promise.all([
-    //     redis.set('user1', JSON.stringify({ id: 1, name : 'maguma' })),
-    //     redis.set('user2', JSON.stringify({ id: 2, name : 'Nakayama' })),
-    //     redis.set('user3', JSON.stringify({ id: 3, name : 'Okabe' })),
-    // ])
+    await Promise.all([
+        redis.set('user:1', JSON.stringify({ id: 1, name : 'maguma' })),
+        redis.set('user:2', JSON.stringify({ id: 2, name : 'Nakayama' })),
+        redis.set('user:3', JSON.stringify({ id: 3, name : 'Okabe' })),
+    ])
 
-    await redis.rpush('users:list', JSON.stringify({ id: 1, name : 'maguma' }));
-    await redis.rpush('users:list', JSON.stringify({ id: 2, name : 'Nakayama' }));
-    await redis.rpush('users:list', JSON.stringify({ id: 3, name : 'Okabe' }));
+    // await redis.rpush('users:list', JSON.stringify({ id: 1, name : 'maguma' }));
+    // await redis.rpush('users:list', JSON.stringify({ id: 2, name : 'Nakayama' }));
+    // await redis.rpush('users:list', JSON.stringify({ id: 3, name : 'Okabe' }));
 };
          
 
@@ -58,13 +60,34 @@ app.get('/user/:id', logMiddleware, async (req, res) => {
 
 app.get('/users', logMiddleware, async (req, res) => {
     try {
-        const offset = req.query?.offset ? Number(req.query.offset) : 0;
-        const userList = await redis.lrange('users:list', offset, offset + 1);
+
+        // offset版
+        // const offset = req.query?.offset ? Number(req.query.offset) : 0;
+        // const userList = await redis.lrange('users:list', offset, offset + 1);
     
-        const users = userList.map((user) => {
-            return JSON.parse(user)
+        // const users = userList.map((user) => {
+        //     return JSON.parse(user)
+        // });
+        // res.status(200).send({users});
+
+        // stream版
+        const stream = redis.scanStream({
+            match: 'user:*', // パターンにマッチするキーを取得
+            count: 2 // 一度に取得する数
         });
-        res.status(200).send({users});
+
+        const users = [];
+        for await (const resultKeys of stream) {
+            for (const key of resultKeys) {
+                const value = await redis.get(key);
+                console.log('key:', key);
+                console.log('value:', value);
+                users.push(JSON.parse(value))
+            }
+        }
+        console.log('users:', users);
+
+        res.render(path.join(__dirname, 'view', 'users.ejs'), { users: users });
     } catch (err) {
         console.error('ユーザーデータの取得に失敗しました:', err); 
         res.status(500).send('ユーザーデータの取得に失敗しました');
