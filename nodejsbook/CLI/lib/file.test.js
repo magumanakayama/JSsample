@@ -10,6 +10,6 @@ const parentDir = path.dirname(__dirname);
 const argv = { file: 'hoge.txt' }; // テスト用の引数
 
 test('readFileContentのテスト', () => {
-    expect(readFileContent(parentDir, argv)).toStrictEqual('hoge\r\nhogehoge\r\nhogege');
+    expect(readFileContent(parentDir, argv)).toStrictEqual('hoge\nhogehoge\nhogege');
 });
 // });
