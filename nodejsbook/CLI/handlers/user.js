@@ -4,8 +4,8 @@ const redis = require('../lib/redis');
 // '/user:id'の時に呼び出す関数
 const getUser = async (request) => {
     const key = `user${request.params.id}`;
-    const val = await redis.getClient().get(key);
-    const user = JSON.parse(val);
+    const val = await redis.getClient().get(key); // valはJSON文字列
+    const user = JSON.parse(val); // userはJSオブジェクト
     return user;
 }
 exports.getUser = getUser;
