@@ -33,7 +33,7 @@ app.get('/user/:id', logMiddleware, async (req, res) => {
         const user = await usersHandler.getUser(req);
         res.status(200).json(user);
     } catch (err) {
-        console.error('ユーザーデータの取得に失敗しました:', err);
+        console.error(err.message, err?.cause);
         res.status(500).send('ユーザーデータの取得に失敗しました');
     }
 });
@@ -54,10 +54,13 @@ app.get('/err', logMiddleware, (req, res) => {
     throw new Error('意図的なエラー');
 });
 
-// 包括的エラーハンドリング(Express全体のエラーハンドリングができる)
+// 包括的エラーハンドリング(Express全体のエラーハンドリングができる、非同期関数のエラーはこれだけでは捕捉できない)
 app.use((err, req, res, next) => {
-    console.error(err);
+    if (err.status) {
+        return res.status(err.status).send(err.message);
+    }
     res.status(500).send('さーばーえらー');
+    console.error('さーばーえらー', err);
 });
 //////////////////////////////////////////////
 

@@ -37,12 +37,12 @@ test('getUser 成功', async () => {
     expect(mockRedisGet).toHaveBeenCalledWith('user1');
 });
 
-test('getUser 失敗', async () => {
+test('getUser 失敗：何かしら例外', async () => {
     // 期待するアサーションの数を指定、必ずアサーションを通るようにする
     expect.assertions(2);
 
     // モックの戻り値を設定
-    mockRedisGet.mockRejectedValueOnce(new Error('User not found'));
+    mockRedisGet.mockRejectedValueOnce(new Error('error something'));
 
     const req = { params: { id: 999 } };
 
@@ -50,7 +50,26 @@ test('getUser 失敗', async () => {
         const user = await getUser(req);
     } catch (err) {
         // エラーメッセージの確認
-        expect(err.message).toStrictEqual('User not found');
+        expect(err.message).toStrictEqual('error something');
+        expect(err instanceof Error).toStrictEqual(true);
+    }
+});
+
+test('getUser 失敗：nullが返却される', async () => {
+    // 期待するアサーションの数を指定、必ずアサーションを通るようにする
+    expect.assertions(3);
+
+    // モックの戻り値を設定
+    mockRedisGet.mockResolvedValueOnce(null);
+
+    const req = { params: { id: 100 } };
+
+    try {
+        const user = await getUser(req);
+    } catch (err) {
+        // エラーメッセージの確認
+        expect(err.message).toStrictEqual('falsyだよ');
+        expect(err.cause).toStrictEqual(null);
         expect(err instanceof Error).toStrictEqual(true);
     }
 });

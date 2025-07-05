@@ -6,6 +6,7 @@ const getUser = async (request) => {
     const key = `user${request.params.id}`;
     const val = await redis.getClient().get(key); // valはJSON文字列
     const user = JSON.parse(val); // userはJSオブジェクト
+    isFalsy(user); // ユーザーが存在しない場合はエラーを投げる
     return user;
 }
 exports.getUser = getUser;
@@ -40,3 +41,9 @@ const getUsers = async (request) => {
     return { users: users };
 }
 exports.getUsers = getUsers;
+
+const isFalsy = (value) => {
+    if (!value) {
+        throw new Error('falsyだよ', { cause: value });
+    }
+}
