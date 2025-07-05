@@ -1,5 +1,5 @@
 const redis = require('../lib/redis');
-
+const {BadRequest} = require('../lib/error');
 
 // '/user:id'の時に呼び出す関数
 const getUser = async (request) => {
@@ -36,14 +36,15 @@ const getUsers = async (request) => {
             users.push(JSON.parse(value))
         }
     }
+    isFalsy(users); // ユーザーが存在しない場合はエラーを投げる
     // IDを昇順にソート
     users.sort((a, b) => a.id - b.id);
     return { users: users };
 }
 exports.getUsers = getUsers;
 
-const isFalsy = (value) => {
-    if (!value) {
-        throw new Error('falsyだよ', { cause: value });
+const isFalsy = (val) => {
+    if (!val) {
+        throw new BadRequest('ユーザーが見つかりません', { cause: `値が${val}です` });
     }
 }

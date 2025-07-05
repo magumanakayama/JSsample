@@ -5,6 +5,11 @@ const api = require('./routes/api');
 const redis = require('./lib/redis');
 
 const usersHandler = require('./handlers/user');
+const { get } = require('http');
+
+// エラーハンドリングのためのミドルウェア
+const { BadRequest, NotFoundHTML } = require('./lib/error');
+const { wrap } = require('yargs');
 
 // 静的ファイル配信
 app.use('/static', express.static(path.join(__dirname, 'public')));
@@ -16,6 +21,20 @@ app.get('/', (req, res) => {
     res.render(path.join(__dirname, 'view', 'index.ejs'));
 });
 
+// APIのラッパー関数
+const wrapAPI = (fn, responder = (res, data) => res.status(200).json(data)) => {
+    return (req, res, next) => {
+        try {
+            fn(req)
+                .then((data) => responder(res, data))
+                .catch((e) => {
+                    next(e); //fnでエラーが発生した場合、nextにエラーを渡す
+                });
+        } catch (e) {
+            next(e); //tryブロック内でエラーが発生した場合、nextにエラーを渡す
+        }
+    };
+};
 
 ////////////// Express //////////////
 // 汎用ミドルウェア
@@ -24,30 +43,10 @@ const logMiddleware = (req, res, next) => {
     next();
 };
 
-// app.get('/', logMiddleware, (req, res) => {
-//     res.status(200).send('Hello, World!');
-// });
-
-app.get('/user/:id', logMiddleware, async (req, res) => {
-    try {
-        const user = await usersHandler.getUser(req);
-        res.status(200).json(user);
-    } catch (err) {
-        console.error(err.message, err?.cause);
-        res.status(500).send('ユーザーデータの取得に失敗しました');
-    }
-});
+app.get('/user/:id', logMiddleware, wrapAPI(usersHandler.getUser));
 
 
-app.get('/users', logMiddleware, async (req, res) => {
-    try {
-        const usersObj = await usersHandler.getUsers(req);
-        res.render(path.join(__dirname, 'view', 'users.ejs'), usersObj);
-    } catch (err) {
-        console.error('ユーザーデータの取得に失敗しました:', err);
-        res.status(500).send('ユーザーデータの取得に失敗しました');
-    }
-});
+app.get('/users', logMiddleware, wrapAPI(usersHandler.getUsers, (res, userObj) => res.render(path.join(__dirname, 'view', 'users.ejs'), userObj)));
 
 // エラールート
 app.get('/err', logMiddleware, (req, res) => {
@@ -56,11 +55,18 @@ app.get('/err', logMiddleware, (req, res) => {
 
 // 包括的エラーハンドリング(Express全体のエラーハンドリングができる、非同期関数のエラーはこれだけでは捕捉できない)
 app.use((err, req, res, next) => {
-    if (err.status) {
-        return res.status(err.status).send(err.message);
+    console.error('エラー:', err);
+    switch (true) {
+        case (err instanceof BadRequest):
+            res.status(err.status || 400).send(err.message);
+            break;
+        case (err instanceof NotFoundHTML):
+            res.status(err.status || 404).send(err.message);
+            break;
+        default:
+            res.status(500).send('Internal Server Error');
+            break;
     }
-    res.status(500).send('さーばーえらー');
-    console.error('さーばーえらー', err);
 });
 //////////////////////////////////////////////
 

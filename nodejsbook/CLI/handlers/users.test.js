@@ -13,6 +13,7 @@ jest.mock('../lib/redis', () => {
 })
 
 const { getUser, getUsers } = require('./user');
+const { BadRequest } = require('../lib/error');
 
 beforeEach(() => {
     mockRedisGet.mockReset();
@@ -29,9 +30,6 @@ test('getUser 成功', async () => {
     expect(user.id).toStrictEqual(1);
     expect(user.name).toStrictEqual('maguma');
 
-    // // オブジェクト単位でのテスト
-    // expect(user).toStrictEqual({ id: 1, name: 'maguma' });
-
     // モックの呼び出し回数と引数の確認
     expect(mockRedisGet).toHaveBeenCalledTimes(1);
     expect(mockRedisGet).toHaveBeenCalledWith('user1');
@@ -43,7 +41,6 @@ test('getUser 失敗：何かしら例外', async () => {
 
     // モックの戻り値を設定
     mockRedisGet.mockRejectedValueOnce(new Error('error something'));
-
     const req = { params: { id: 999 } };
 
     try {
@@ -61,16 +58,15 @@ test('getUser 失敗：nullが返却される', async () => {
 
     // モックの戻り値を設定
     mockRedisGet.mockResolvedValueOnce(null);
-
     const req = { params: { id: 100 } };
 
     try {
         const user = await getUser(req);
     } catch (err) {
         // エラーメッセージの確認
-        expect(err.message).toStrictEqual('falsyだよ');
-        expect(err.cause).toStrictEqual(null);
-        expect(err instanceof Error).toStrictEqual(true);
+        expect(err.message).toStrictEqual('ユーザーが見つかりません');
+        expect(err.cause).toStrictEqual('値がnullです');
+        expect(err instanceof BadRequest).toStrictEqual(true);
     }
 });
 
@@ -107,3 +103,29 @@ test('getUsersのテスト', async () => {
     expect(mockRedisGet).toHaveBeenCalledTimes(3);
     expect(mockRedisScanStream).toHaveBeenCalledTimes(1);
 });
+
+
+// むずかったので後回し
+// const testFuncForUsers = (userList, chunkSize, key) => {
+//     const streamMock = {
+//         async* [Symbol.asyncIterator]() {
+//             for (let i = 0; i < userList.length; i += chunkSize) {
+//                 yield userList.slice(i, i + chunkSize);
+//             }
+//         }
+//     };
+//     mockRedisScanStream.mockReturnValueOnce(streamMock);
+
+
+//     mockRedisGet.mockImplementation((key) => {
+//         switch (key) {
+//             case 'user1':
+//                 return Promise.resolve(JSON.stringify({ id: 1, name: 'maguma' }));
+//             case 'user2':
+//                 return Promise.resolve(JSON.stringify({ id: 2, name: 'Nakayama' }));
+//             case 'user3':
+//                 return Promise.resolve(JSON.stringify({ id: 3, name: 'Okabe' }));
+//         }
+//         return Promise.resolve(null);
+//     });
+// };
