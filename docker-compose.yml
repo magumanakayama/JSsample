@@ -10,7 +10,7 @@ services:
     user: "${UID}:${GID}"
     container_name: node
     volumes:
-      - ./nodejsbook:/node-app/nodejsbook
+      - ./packages:/node-app
     environment:
       USER_UID: ${UID}
       USER_GID: ${GID}

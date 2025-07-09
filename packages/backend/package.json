@@ -1,0 +1,26 @@
+{
+    "private": true,
+    "name": "yoneda-app",
+    "description": "yoneda desu",
+    "version": "1.0.0",
+    "dependencies": {
+        "ejs": "^3.1.10",
+        "express": "^5.1.0",
+        "ioredis": "^5.6.1",
+        "marked": "^15.0.12",
+        "yargs": "^16.0.0"
+    },
+    "imports": {
+        "#interface/*": "./interface/*"
+    },
+    "devDependencies": {
+        "eslint": "^9.29.0",
+        "jest": "^30.0.0"
+    },
+    "scripts": {
+        "lint": "eslint ./nodejsbook --ext .js,.ts",
+        "lint nodejsbook": "eslint . --ext .js,.ts",
+        "test": "jest",
+        "server": "node ./server.js"
+    }
+}
