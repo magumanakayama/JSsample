@@ -9,7 +9,7 @@ d_e:
 # docker exec -it -u 0 my_front bash
 
 d_e_c:
-	@docker exec -it node bash -c "cd ./nodejsbook/CLI && bash"
+	@docker exec -it node-backend bash -c "cd ./backend && bash"
 
 d_p:
 	@docker ps

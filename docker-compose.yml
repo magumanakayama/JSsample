@@ -8,16 +8,16 @@ services:
         - USER_UID=${UID}
         - USER_GID=${GID}
     user: "${UID}:${GID}"
-    container_name: node
+    container_name: node-backend
     volumes:
-      - ./packages:/node-app
+      - ./packages/backend:/node-app/backend
     environment:
       USER_UID: ${UID}
       USER_GID: ${GID}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
     ports:
-      - "3000:3000"
+      - "8000:8000"
     tty: true
 
   redis:

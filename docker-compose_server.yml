@@ -17,7 +17,7 @@ services:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
     ports:
-      - "3000:3000"
+      - "8000:8000"
     tty: true
 
   redis:

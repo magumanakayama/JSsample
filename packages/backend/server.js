@@ -76,7 +76,7 @@ redis.connect()
     .once('ready', async () => {
         await redis.init();
         try {
-            app.listen(3000, () => {
+            app.listen(8000, () => {
             console.log('さーばー起動中');
         });
         } catch (err) {
