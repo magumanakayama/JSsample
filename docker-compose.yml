@@ -1,14 +1,14 @@
 # version: '3'
 services:
-  node:
+  node_backend:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_backend
       args:
         - USER_UID=${UID}
         - USER_GID=${GID}
     user: "${UID}:${GID}"
-    container_name: node-backend
+    container_name: node_backend
     volumes:
       - ./packages/backend:/node-app/backend
     environment:
@@ -18,6 +18,25 @@ services:
       REDIS_PORT: ${REDIS_PORT}
     ports:
       - "8000:8000"
+    tty: true
+
+
+  node_frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile_frontend
+      args:
+        - USER_UID=${UID}
+        - USER_GID=${GID}
+    user: "${UID}:${GID}"
+    container_name: node_frontend
+    volumes:
+      - ./packages/frontend:/node-app/frontend
+    environment:
+      USER_UID: ${UID}
+      USER_GID: ${GID}
+    ports:
+      - "3000:3000"
     tty: true
 
   redis:
