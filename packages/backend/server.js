@@ -46,7 +46,7 @@ const logMiddleware = (req, res, next) => {
 app.get('/user/:id', logMiddleware, wrapAPI(usersHandler.getUser));
 
 
-app.get('/users', logMiddleware, wrapAPI(usersHandler.getUsers, (res, userObj) => res.render(path.join(__dirname, 'view', 'users.ejs'), userObj)));
+app.get('/api/users', logMiddleware, wrapAPI(usersHandler.getUsers));
 
 // エラールート
 app.get('/err', logMiddleware, (req, res) => {
