@@ -10,7 +10,7 @@ services:
     user: "${UID}:${GID}"
     container_name: node_backend
     volumes:
-      - ./packages/backend:/node-app/backend
+      - ./packages/backend:/back_app
     environment:
       USER_UID: ${UID}
       USER_GID: ${GID}
@@ -31,7 +31,7 @@ services:
     user: "${UID}:${GID}"
     container_name: node_frontend
     volumes:
-      - ./packages/frontend:/node-app/frontend
+      - ./packages/frontend:/front_app
     environment:
       USER_UID: ${UID}
       USER_GID: ${GID}
