@@ -5,9 +5,23 @@ const User = ({ name }) => {
   return <li style={{padding: '8px'}}>{name}</li>;
 };
 
+const getUsers = async () => {
+  const response = await fetch('/api/users');
+  const body = await response.json();
+  return body;
+}
+
 const App = () => {
   const [inputText, setInputText] = useState('');
   const [users, setUsers] = useState(['maguma', 'nakayama', 'okabe']);
+
+  getUsers()
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      // console.error(error);
+    });
 
   const userList = users.map((user, index) => {
     return <User key={index} name={user}></User>;
