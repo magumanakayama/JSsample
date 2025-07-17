@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 const User = ({ name }) => {
@@ -13,15 +13,18 @@ const getUsers = async () => {
 
 const App = () => {
   const [inputText, setInputText] = useState('');
-  const [users, setUsers] = useState(['maguma', 'nakayama', 'okabe']);
+  const [users, setUsers] = useState([]);
 
-  getUsers()
-    .then(data => {
-      console.log(data);
-    })
-    .catch(error => {
-      // console.error(error);
-    });
+  useEffect(() => {
+    getUsers()
+      .then(data => {
+        const users = data.users.map(user => user.name);
+        setUsers(users);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
 
   const userList = users.map((user, index) => {
     return <User key={index} name={user}></User>;
@@ -30,12 +33,10 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setUsers([...users, inputText]);
-    console.log('handle submit');
   };
   
   const handleChange = (event) => {
     setInputText(event.target.value);
-    console.log('handle change: ', inputText);
   };
 
   return (
