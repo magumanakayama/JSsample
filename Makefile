@@ -1,15 +1,14 @@
 d_u:
-	@docker compose up -d --build front
+	@docker compose up -d --build
 
 d_d:
 	@docker compose down
 
-d_e:
-	@docker exec -it my_front bash
-# docker exec -it -u 0 my_front bash
+d_eb:
+	@docker exec -it node_backend bash
 
-d_e_c:
-	@docker exec -it node-backend bash -c "cd ./backend && bash"
+d_ef:
+	@docker exec -it node_frontend bash
 
 d_p:
 	@docker ps
