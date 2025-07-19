@@ -77,7 +77,7 @@ redis.connect()
         await redis.init();
         try {
             app.listen(8000, () => {
-            console.log('さーばー起動中');
+            console.log('ばっくえんど起動中');
         });
         } catch (err) {
             console.error('Redisの接続に失敗しました:', err);
