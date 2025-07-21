@@ -8,6 +8,7 @@ const User = ({ name }) => {
 const getUsers = async () => {
   const response = await fetch('/api/users');
   const body = await response.json();
+  console.log('getUsers response:', body);
   return body;
 }
 
@@ -18,6 +19,7 @@ const Users = () => {
   useEffect(() => {
     getUsers()
       .then(data => {
+        console.log('Fetched users:', data);
         const users = data.users.map(user => user.name);
         setUsers(users);
       })
