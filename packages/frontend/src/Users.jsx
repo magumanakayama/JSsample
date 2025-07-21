@@ -1,32 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useUsers } from './useUsers';
 import './App.css';
 
 const User = ({ name }) => {
   return <li style={{padding: '8px'}}>{name}</li>;
 };
 
-const getUsers = async () => {
-  const response = await fetch('/api/users');
-  const body = await response.json();
-  console.log('getUsers response:', body);
-  return body;
-}
-
 const Users = () => {
-  const [inputText, setInputText] = useState('');
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    getUsers()
-      .then(data => {
-        console.log('Fetched users:', data);
-        const users = data.users.map(user => user.name);
-        setUsers(users);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
+  const { submit, input, inputText, users } = useUsers();
 
   const userList = users.map((user, index) => {
     return <User key={index} name={user}></User>;
@@ -34,11 +14,11 @@ const Users = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setUsers([...users, inputText]);
+    submit();
   };
   
   const handleChange = (event) => {
-    setInputText(event.target.value);
+    input(event.target.value);
   };
 
   return (
