@@ -1,7 +1,5 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { HttpResponse, http } from 'msw';
-import { setupServer } from 'msw/node';
 import Users from './Users';
 
 
