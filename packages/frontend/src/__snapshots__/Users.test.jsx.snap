@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Usersコンポーネントのテスト > Usersのスナップショットテスト 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <ul>
+      <li
+        style="padding: 8px;"
+      >
+        maguma
+      </li>
+      <li
+        style="padding: 8px;"
+      >
+        nakayama
+      </li>
+      <li
+        style="padding: 8px;"
+      >
+        makise
+      </li>
+    </ul>
+    <form>
+      <input
+        type="text"
+      />
+      <button
+        type="submit"
+      >
+        追加
+      </button>
+    </form>
+    <div>
+      入力値：
+    </div>
+  </div>
+</div>
+`;

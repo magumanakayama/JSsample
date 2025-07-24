@@ -1,6 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Users from './Users';
+import { it } from 'vitest';
 
 
 // const server = setupServer();
@@ -23,35 +24,35 @@ vi.mock('./useUsers', () => ({
   }),
 }));
 
+const listExpecter = async (assertList) => {
+  for (const item of assertList) {
+    await waitFor(() => {
+      expect(screen.getByText(item)).toBeInTheDocument();
+    });
+  }
+};
+
 describe('Usersコンポーネントのテスト', () => {
   it('初期描画のテスト', async () => {
-
-    // server.use(
-    //   http.get('/api/users', (req, res, ctx) => {
-    //     return HttpResponse.json({ users: [
-    //       { id: 1, name: "maguma" },
-    //       { id: 2, name: "Nakayama" },
-    //       { id: 3, name: "Okabe" }
-    //     ] });
-    //   })
-    // );
-
     render(<Users />);
-
-    await waitFor(() => {
-      return expect(screen.getByText('maguma')).toBeInTheDocument();
-    });
-    await waitFor(() => {
-      return expect(screen.getByText('nakayama')).toBeInTheDocument();
-    });
-    await waitFor(() => {
-      return expect(screen.getByText('makise')).toBeInTheDocument();
-    });
+    await listExpecter(['maguma', 'nakayama', 'makise']);
   });
 
   it('追加ボタン押下でsubmitが呼ばれる', async () => {
     render(<Users />);
     fireEvent.submit(screen.getByRole('button', { name: '追加' }));
     expect(submit).toHaveBeenCalledTimes(1);
+  });
+
+  it('入力値が更新される', async () => {
+    render(<Users />);
+    const inputElement = screen.getByRole('textbox');
+    fireEvent.change(inputElement, { target: { value: '新しいユーザー' } });
+    expect(input).toHaveBeenCalledWith('新しいユーザー');
+  });
+
+  it('Usersのスナップショットテスト', async () => {
+    const { container } = render(<Users />);
+    expect(container).toMatchSnapshot();
   });
 });
