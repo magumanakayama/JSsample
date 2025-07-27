@@ -11,14 +11,13 @@ app.use(
     })
 );
 
-app.use('/static', express.static(path.join(__dirname, 'build', 'static')));
+// app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets')));
 
-app.get('/manifest.json', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'manifest.json'));
-});
+// dist配下を静的ファイルとして公開
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get(/(.*)/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // 包括的エラーハンドリング(Express全体のエラーハンドリングができる、非同期関数のエラーはこれだけでは捕捉できない)

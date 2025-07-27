@@ -1,10 +1,15 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+    port: 3000
+  },
   test: {
-    globals: true, // グローバル変数を有効にする
-    environment: 'jsdom' // JSDOM環境でテストを実行
+    globals: true,
+    environment: 'jsdom',
   }
-});
+})

@@ -16,7 +16,7 @@ ARG USER_UID=1000
 ARG USER_GID=1000
 
 # エイリアス生成
-RUN echo 'alias server = "node server.js"' >> ~/.bashrc
+# RUN echo 'alias server = "node server.js"' >> ~/.bashrc
 
 # アプリケーションのディレクトリ作成
 RUN mkdir -p /$NODE_ROOT/*
