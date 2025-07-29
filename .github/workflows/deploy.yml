@@ -24,14 +24,16 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        working-directory: packages/frontend
 
       - name: Build Vite app
         run: yarn build
+        working-directory: packages/frontend
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: packages/frontend/dist
 
   deploy:
     needs: build
